@@ -1,0 +1,48 @@
+version: '3.0'
+services:
+  web:
+    build: nginx
+    ports:
+        - "8080:80"
+    links:
+      - db
+      - php
+    env_file:
+      - env
+    volumes:
+      - ./html/magento2:/var/www/html
+      - ./site.conf:/etc/nginx/conf.d/default.conf
+  php:
+    build: php
+    volumes:
+      - ./html/magento2:/var/www/html
+    ports:
+      - "9000:9000"
+  db:
+    image: mysql:5.6.23
+    volumes:
+      - ./sql:/tmp/sql
+    ports:
+      - "3306:3306"
+    env_file:
+      - env
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8580:80"
+    links:
+      - db  
+  varnish:
+    build: varnish
+    environment:
+      - VIRTUAL_HOST=dev.1000lentilles.local
+      - VIRTUAL_PORT=80
+      - HTTPS_METHOD=noredirect
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    links:
+      - web
+volumes:
+  db-data: 

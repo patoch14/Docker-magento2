@@ -1,0 +1,4 @@
+#!/bin/bash
+
+php -dmemory_limit=5G /var/www/html/bin/magento setup:di:compile
+php -dmemory_limit=5G /var/www/html/bin/magento setup:static-content:deploy -f

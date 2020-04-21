@@ -1,0 +1,5 @@
+.idea
+html/*
+!html/.keep
+sql/*
+!sql/.keep
